@@ -2,28 +2,36 @@ import argparse
 import sympy
 import numpy
 import math
-from typing import Optional, Union, List, Any
+from typing import Optional, Union, List
 from prettytable import PrettyTable
 
 
 def calculating_point_that_contains_PI(point: str) -> float:
     """ Функція для обчислення значення заданої точки, яка була отримана
-        з командної строки, та яка має в собі математичну константу Пі в
-        неявному виді, (наприк. Pi/4 чи pi * 2).
+        з командної строки, та яка містить математичну константу Pі у
+        неявному вигляді.
 
-        Функція перетворює строкове значення заданної точки,
-        в значення типу float.
+        Функція перетворює строкове значення заданої точки в значення
+        типу float.
+
+        Приклади роботи функції:
+
+        'pi/4' -> 0.78539816339
+        '2/pi' -> 0.63661977236
+        'pi*3' -> 9.42477796077
+        '4+pi' -> 7.14159265359
+        'pi-1' -> 2.14159265359
 
     Args:
-        point: задана точка з командної строки, яка має число Pi (тип string).
+        point: задана точка з командної строки, яка містить Pi (тип - string).
     Returns:
-
-
+        обчислене значення заданої точки.
     """
+
     parts_point: List[Union[str, float]]
     value_point: float
 
-    # Розбиваємо рядок зі введеним значенням заданої точки на список
+    # Розбиваємо рядок з введеним значенням заданої точки на список
     # двух елементів. Замінюємо строковий елемент "pi" на числовий елемент pi
     # типу float бібліотеки math. Обчислуємо і повертаємо значення точки.
     if '/' in point:
@@ -31,69 +39,61 @@ def calculating_point_that_contains_PI(point: str) -> float:
         try:
             value_point = float(parts_point[0]) / float(parts_point[1])
         except ValueError:
-            error_messege = 'Помилка: точка повинна містити числа, не' + \
-                            'враховуючи числа Pi.'
-            raise argparse.ArgumentTypeError(error_messege)
+            raise argparse.ArgumentTypeError
         except ZeroDivisionError:
-            error_messege = 'Помилка: {} - ділення на нуль!'.format(point)
-            raise argparse.ArgumentTypeError(error_messege)
+            raise argparse.ArgumentTypeError
     elif '*' in point:
         parts_point = [math.pi if x == 'pi' else x for x in point.split('*')]
         try:
             value_point = float(parts_point[0]) * float(parts_point[1])
         except ValueError:
-            error_messege = 'Помилка: точка повинна містити числа, не' + \
-                            'враховуючи числа Pi.'
-            raise argparse.ArgumentTypeError(error_messege)
+            raise argparse.ArgumentTypeError
     elif '+' in point:
         parts_point = [math.pi if x == 'pi' else x for x in point.split('+')]
         try:
             value_point = float(parts_point[0]) + float(parts_point[1])
         except ValueError:
-            error_messege = 'Помилка: точка повинна містити числа, не' + \
-                            'враховуючи числа Pi.'
-            raise argparse.ArgumentTypeError(error_messege)
+            raise argparse.ArgumentTypeError
     elif '-' in point:
         parts_point = [math.pi if x == 'pi' else x for x in point.split('-')]
         try:
             value_point = float(parts_point[0]) - float(parts_point[1])
         except ValueError:
-            error_messege = 'Помилка: точка повинна містити числа, не' + \
-                            'враховуючи числа Pi.'
-            raise argparse.ArgumentTypeError(error_messege)
+            raise argparse.ArgumentTypeError
 
     return value_point
 
 
-def point_validation(point):
-    """ A
+def point_validation(point: str) -> float:
+    """ Функція для валідації заданого значення точки з командної строки.
+        Якщо значення містить в собі константу Pi, вичисляємо його в
+        функції 'calculating_point_that_contains_PI' та повертаємо значення.
+        Якщо ні, робимо перевірку вхідного значення та повертаємо його.
+
+    Args:
+        point: задана точка з командної строки (тип - string).
+    Returns:
+        значення точки (тип - float).
     """
 
+    value_point: float
     point = point.replace(' ', '')
 
     if 'pi' in point:
         return calculating_point_that_contains_PI(point)
-    else:
-        if '/' in point:
-            point = point.split('/')
-            try:
-                point = float(point[0]) / float(point[1])
-                return point
-            except ValueError or ZeroDivisionError:
-                raise argparse.ArgumentTypeError
-        else:
-            try:
-                point = float(point)
-                return point
-            except ValueError:
-                raise argparse.ArgumentTypeError
+
+    try:
+        value_point = float(point)
+        return value_point
+    except ValueError:
+        raise argparse.ArgumentTypeError
 
 
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--step', '-h_val', type=float, default=1,
                     help='крок сітки, тип - float.')
 parser.add_argument('--point', '-x0', type=point_validation, default=math.pi/4,
-                    help='початкова точка. тип - float.')
+                    help='початкова точка. Приклад: pi/4, 2*pi, 3, 1-pi, 8.')
 parser.add_argument('--r_value', '-r', type=float, default=0.5,
                     help='початкова точка. тип - float.')
 args = parser.parse_args()
@@ -184,9 +184,9 @@ def main():
 
     # Точне значення похідної
     print('\n\n ж) Точне значення похідної:\n')
-    print('    y\u2032(x) = {}'.format(derivative()))
+    print('    y\u2032(x) = {}'.format(find_derivative()))
 
-    yx0 = derivative(x0)
+    yx0 = find_derivative(x0)
     print('    y\u2032(x\u2080) = {}\n'.format(round(yx0, 3)))
 
     delta1 = y0h - yx0
@@ -199,11 +199,6 @@ def main():
     print('    \u03B4\u2083 = {}\n\n'.format(round(delta3, 3)))
 
 
-
-
 if __name__ == '__main__':
 
-    print(calculating_point_that_contains_PI('pi/w'))
-   # print(point_validation('pi / 0'))
-   # main()
-
+    main()
