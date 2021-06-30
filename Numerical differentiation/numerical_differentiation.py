@@ -1,8 +1,9 @@
 import argparse
-import sympy
+import string
+import sympy as sym
 import numpy
 import math
-from typing import Optional, Union, List
+from typing import Dict, Optional, Union, List, Dict
 from prettytable import PrettyTable
 
 
@@ -89,30 +90,83 @@ def point_validation(point: str) -> float:
         raise argparse.ArgumentTypeError
 
 
-parser = argparse.ArgumentParser(description='')
+parser = argparse.ArgumentParser(description='Обчислення похідної.')
+parser.add_argument('--function', '-f', type=str, default='cos(x)',
+                    choices=['sin(x)', 'sin(2x)', 'sin(3x)', 'sin(0.5x)',
+                             'cos(x)', 'cos(2x)', 'cos(3x)', 'cos(0.5x)',
+                             'tg(x)', 'tg(2x)', 'tg(3x)', 'tg(0.5x)',
+                             'ctg(x)', 'ctg(2x)', 'ctg(3x)', 'ctg(0.5x)',
+                             'ln(x)', 'ln(x^2)', 'ln(x+2)', '1/x', '1/(2x)',
+                             '2/x', '1/(x^2)', '1/(x^3)', '1/(x+1)',
+                             '1/(x^2+1)', '1/(x^3+1)', 'SQRT(x)', 'SQRT(2x)',
+                             'SQRT(0.5x)', 'SQRT(x+1)', 'SQRT(2x+1)',
+                             'SQRT(0.5x+1)', '1/SQRT(x)'],
+                    help='Функція для диференціювання. Приклад: ln(x^2)')
 parser.add_argument('--step', '-h_val', type=float, default=1,
-                    help='крок сітки, тип - float.')
+                    help='Крок сітки. Тип - float.')
 parser.add_argument('--point', '-x0', type=point_validation, default=math.pi/4,
-                    help='початкова точка. Приклад: pi/4, 2*pi, 3, 1-pi, 8.')
+                    help='Початкова точка. Приклад: pi/4, 2*pi, 3, 1-pi, 8.')
 parser.add_argument('--r_value', '-r', type=float, default=0.5,
-                    help='початкова точка. тип - float.')
+                    help='Початкова точка. Тип - float.')
 args = parser.parse_args()
 
 
-def funciton(x: float) -> float:
-    return math.cos(2 * x)
+def function(x: float, f: str = args.function) -> Optional[float]:
+    """ Функція для обчислення значення заданої функції у точках х.
+
+    Args:
+        x: значення точки (тип - float).
+        f: задана функція з командної строки (тип - str).
+    Returns:
+        значення заданої функції у точці х.
+    """
+
+    available_f: Dict[str, float]
+    available_f = {'sin(x)': math.sin(x), 'sin(2x)': math.sin(2 * x),
+                   'sin(3x)': math.sin(3*x), 'sin(0.5x)': math.sin(0.5 * x),
+                   'cos(x)': math.cos(x), 'cos(2x)': math.cos(2 * x),
+                   'cos(3*x)': math.cos(3 * x), 'cos(0.5x)': math.cos(0.5 * x),
+                   'tg(x)': math.tan(x), 'tg(2x)': math.tan(2 * x),
+                   'tg(3x)': math.tan(3 * x), 'tg(0.5x)': math.tan(0.5 * x),
+                   'ctg(x)': math.cos(x) / math.sin(x),
+                   'ctg(2x)': math.cos(2 * x) / math.sin(2 * x),
+                   'ctg(3x)': math.cos(3 * x) / math.sin(3 * x),
+                   'ctg(0.5x)': math.cos(0.5 * x) / math.sin(0.5 * x),
+                   'ln(x)': math.log10(x), 'ln(x^2):': math.log10(x**2),
+                   'ln(x+2)': math.log10(x + 2), '1/x': 1 / x,
+                   '1/(2x)': 1 / (2 * x), '2/x': 2 / x,
+                   '1/(x^2)': 1 / x**2, '1/(x^3)': 1 / x**3,
+                   '1/(x+1)': 1 / (x + 1), '1/(x^2+1)': 1 / (x**2 + 1),
+                   '1/(x^3+1)': 1 / (x**3 + 1), 'SQRT(x)': math.sqrt(x),
+                   'SQRT(2x)': math.sqrt(2 * x),
+                   'SQRT(0.5x)': math.sqrt(0.5 * x),
+                   'SQRT(x+1)': math.sqrt(x + 1),
+                   'SQRT(2x+1)': math.sqrt(2 * x + 1),
+                   'SQRT(0.5x+1)': math.sqrt(0.5 * x + 1),
+                   '1/SQRT(x)': 1 / math.sqrt(x)}
+
+    return available_f.get(f)
 
 
-def find_derivative(x0: Optional[float] = None) -> Union[sympy.core.mul.Mul,
-                                                         numpy.float64]:
-    x = sympy.symbols('x')
-    dx = sympy.cos(2 * x).diff(x)
+def find_derivative(func: str = args.function,
+                    x0: Optional[float] = None) -> Union[str, float]:
+    """ Функція для знаходження похідної заданої функції.
+        Якщо початкова точка - None, повертається похідна функції.
+        Якщо початкова точка передана в функцію, обчислюється
+        похнідна функції у початковій точці.
+
+    Args:
+        func: задана функція з командної строки (тип - string).
+        x0: задана початкова точка з командної строки (тип - float).
+    Returns:
+
+    """
+    x = sym.symbols('x')
 
     if x0 is None:
-        return dx
+        return str(sym.diff(func))
     else:
-        dx0 = sympy.lambdify(x, dx)
-        return dx0(x0)
+        return float(sym.diff(func).evalf(subs={x: x0}))
 
 
 def print_table(name1: str, name2: str,
@@ -128,19 +182,15 @@ def print_table(name1: str, name2: str,
 def main():
 
     # Вхідні дані
-    h: int
-    x0: int
-    r: int
-
-    h = args.step
-    x0 = args.point
-    r = args.r_value
+    h: float = args.step
+    x0: float = args.point
+    r: float = args.r_value
 
     # Вузлові значення аргументу і функції (h крок)
     print('\n a) Вузлові значення аргументу і функції, ',
           'що диференціюється (h крок):\n')
     nodes = [round(x, 3) for x in numpy.arange(x0 - h, x0 + h + h, h)]
-    y_val = [round(funciton(x), 3) for x in nodes]
+    y_val = [round(function(x), 3) for x in nodes]
 
     # Відображення таблиці
     print_table('Nodes (h)', 'Y-values (h)', nodes, y_val)
@@ -153,7 +203,7 @@ def main():
     # Вузлові значення аргументу і функції (rh крок)
     nodes_r = [round(x, 3) for x in
                numpy.arange(x0 - h * r, x0 + 2 * (h * r), h * r)]
-    y_val_r = [round(funciton(x), 3) for x in nodes_r]
+    y_val_r = [round(function(x), 3) for x in nodes_r]
 
     # Відображення таблиці
     print('\n в) Вузлові значення аргументу і функції, ',
@@ -186,7 +236,7 @@ def main():
     print('\n\n ж) Точне значення похідної:\n')
     print('    y\u2032(x) = {}'.format(find_derivative()))
 
-    yx0 = find_derivative(x0)
+    yx0 = find_derivative(x0=x0)
     print('    y\u2032(x\u2080) = {}\n'.format(round(yx0, 3)))
 
     delta1 = y0h - yx0
