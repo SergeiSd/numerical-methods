@@ -20,4 +20,14 @@ purposes.
 
 Just git clone this repo and you are good to go.
 
-    git clone https://github.com/yinguobing/cnn-facial-landmark.git
+    git clone https://github.com/SergeiSd/numerical-methods.git
+    
+## Launching the program
+    
+    # From the repo's root directory
+    python3 numerical_differentiation.py \
+        --function='sin(0.5x)' \
+        --point=pi/2 \
+        --step=1 \
+        --r_value=0.5
+        
