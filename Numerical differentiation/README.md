@@ -6,3 +6,10 @@ formula of the second order of accuracy on two grids.
 Here is an example of the result of the program.
 
 ![alt text](https://github.com/SergeiSd/numerical-methods/blob/main/Numerical%20differentiation/images/program_result.png)
+
+# Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing 
+purposes.
+
+# Prerequisites
