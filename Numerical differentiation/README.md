@@ -13,3 +13,5 @@ These instructions will get you a copy of the project up and running on your loc
 purposes.
 
 # Prerequisites
+
+[![argparse](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://pypi.org/project/argparse/)
