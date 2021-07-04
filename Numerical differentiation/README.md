@@ -14,4 +14,4 @@ purposes.
 
 # Prerequisites
 
-[![argparse](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://pypi.org/project/argparse/)
+[![argparse](https://img.shields.io/badge/numpy-v.1.19-inactivegreen)
