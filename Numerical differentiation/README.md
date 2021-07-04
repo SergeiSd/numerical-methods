@@ -16,7 +16,8 @@ purposes.
 
 ![](https://img.shields.io/badge/argparse-v.1.4-inactivegreen) ![](https://img.shields.io/badge/numpy-v.1.19-inactivegreen) ![](https://img.shields.io/badge/sympy-v.1.8-inactivegreen) ![](https://img.shields.io/badge/prettytable-v.2.1-inactivegreen)
 
-# Installing
+## Installing
 
 Just git clone this repo and you are good to go.
-  git clone https://github.com/yinguobing/cnn-facial-landmark.git
+
+    git clone https://github.com/yinguobing/cnn-facial-landmark.git
