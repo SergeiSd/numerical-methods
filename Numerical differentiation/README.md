@@ -14,4 +14,4 @@ purposes.
 
 # Prerequisites
 
-[![argparse](https://img.shields.io/badge/numpy-v.1.19-inactivegreen)
+(https://img.shields.io/badge/numpy-v.1.19-inactivegreen)
