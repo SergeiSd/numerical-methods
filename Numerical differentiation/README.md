@@ -14,7 +14,7 @@ purposes.
 
 ## Prerequisites
 
-![](https://img.shields.io/badge/argparse-v.1.4-inactivegreen) ![](https://img.shields.io/badge/numpy-v.1.19-inactivegreen) ![](https://img.shields.io/badge/sympy-v.1.8-inactivegreen) ![](https://img.shields.io/badge/prettytable-v.2.1-inactivegreen)
+![](https://img.shields.io/badge/numpy-v.1.19-inactivegreen) ![](https://img.shields.io/badge/sympy-v.1.8-inactivegreen) ![](https://img.shields.io/badge/prettytable-v.2.1-inactivegreen)
 
 ## Installing
 
